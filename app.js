@@ -9,18 +9,23 @@ request({ url: url, json: true }, (error, response) => {
   const data = response.body
   if (error){
     console.log('Unable to connect to weather service!')
-  }else if (response.body.error){
+  } else if (response.body.error){
     console.log('Unable to find location')
-  }else{
+  } else {
       console.log(`${data.daily.data[1].summary} It is currently ${data.currently.temperature} degrees out. There is a ${data.currently.precipProbability}% chance of rain.`)
   }
 })
 
-// const geourl = `https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=${process.env.MAPBOX}` 
+const geourl = `https://api.mapbox.com/geocoding/v5/mapbox.places/Los%20Angeles.json?access_token=${process.env.MAPBOX}` 
 
-// request({ url: geourl, json: true }, (error, response) => {
-//   const latitude = response.body.features[0].center[1]
-//   const longitude = response.body.features[0].center[0]
-
-//   console.log(latitude, longitude)
-// })
+request({ url: geourl, json: true }, (error, response) => {
+  if (error){
+    console.log('Unable to connect to location service!')
+  } else if (response.body.features.length === 0){
+    console.log('Unable to find location. Try another location')
+  } else {
+    const latitude = response.body.features[0].center[1]
+    const longitude = response.body.features[0].center[0]
+    console.log(latitude, longitude)
+  }
+})
